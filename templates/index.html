@@ -1,0 +1,143 @@
+{% extends 'base.html'%}
+{% block body %}
+<h1>FL Hub</h1>
+    <form method="POST" action="/">
+        <input type="text" name="url" placeholder="Enter the URL...">
+        <br>
+        <input type="text" name="state" placeholder="Enter the State....">
+        <br>
+        <button type="submit" name="submit" value="submit">EXTRACT</button>
+    </form>
+<h2>{{middle}}</h2>
+{% if condition%}
+    <form method="POST" action="/extraction">
+        <button type="submit" name="button_id" value="law_firm_name">Law Firm Name</button>
+        <button type="submit" name="button_id" value="phone_number">Phone Number</button>
+        <button type="submit" name="button_id" value="geographic_location">Geographic location</button>
+        <button type="submit" name="button_id" value="state">State</button>
+        <button type="submit" name="button_id" value="city">City</button>
+        <button type="submit" name="button_id" value="all_details">All Details</button>
+        <button type="submit" name="button_id" value="pages">Pages</button>
+    </form>
+{% endif%}
+{% if condition1%}
+    <h2>{{ data }}</h2>
+{% endif%}
+{% if condition2%}
+    {% for item in data%}
+        <h2>{{ item }}</h2>
+    {%endfor%}
+{% endif%}
+{% if condition3%}
+    <h2>The law firm name is:</h2><p>{{data[1]}}</p>
+    <br>
+    <h2>The geographic locations are:</h2>
+    {% for item in data[2]%}
+        <li>{{ item }}</li>
+    {%endfor%}
+    <br>
+    <h2>The Phone numbers are:</h2>
+    {% for item in data[5]%}
+    <li>{{ item }}</li>
+    {%endfor%}
+{% endif%}
+{% if condition4 %}
+    <form method="GET" action='/download_json'>
+        <button type="submit" name="download_id" value="json">Download JSON</button>
+    </form>
+    <form method="GET" action='/download_csv'>
+        <button type="submit" name="download_id" value="CSV">Download CSV</button>  
+    </form>
+{% endif%}
+{% if condition5 %}
+<table>
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>LAW FIRM NAME</th>
+            <th>GEOGRAPHIC LOCATION</th>
+            <th>CITY</th>
+            <th>STATE</th>
+            <th>PHONE NUMBERS</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in data_table%}
+        <tr>
+            <th>{{item[1]}}</th>
+            <th>{{item[2]}}</th>
+            <th>{{item[3]}}</th>
+            <th>{{item[5]}}</th>
+            <th>{{item[4]}}</th>
+            <th>{{item[6]}}</th>
+        </tr>
+    {%endfor%}
+    </tbody>
+</table>
+
+{% endif%}
+
+
+
+{% if page_category %}
+<br>
+The Page Category for this page is
+<form action="/category_main" method="POST">
+        <select id="dropdown" name="category_main" onchange="this.form.submit()">
+            <option name="" value="">SELECT CATEGORY</option>
+            {% for item in page_category%}
+            <option name="category_main" value="{{item}}">{{item}}</option>
+            {%endfor%}
+        </select>
+<input type="submit" style="display: none;">
+</form>
+{% endif%}
+
+{% if category_content %}
+<button id="copyButton" class="btn btn-primary">Copy Body Content</button>
+    <h2>The page link is:</h2> {{category_content['link']}}
+    <h2>h1_content is:</h2> {{category_content['h1_content']}}
+    <h2>body_content is:</h2> <p id="targetElement">{{category_content['body_content']}}</p>
+{% endif%}
+
+{% if specific_category_content%}
+<br>
+The Specific Page Categories are
+<form action="/specific_category_main" method="POST">
+        <select id="dropdown" name="specific_category_main" onchange="this.form.submit()">
+            <option name="" value="">SELECT SPECIFIC CATEGORY</option>
+            {% for item in specific_category_content%}
+            <option name="specific_category_main" value="{{item}}">{{item}}</option>
+            {%endfor%}
+        </select>
+<input type="submit" style="display: none;">
+</form>
+{% endif%}
+    
+{% if specific_data%}
+<br>
+
+<button id="copyButton" class="btn btn-primary">Copy Body Content</button>
+
+
+    <h2>The page link is:</h2> {{specific_data['link']}}
+    <h2>h1_content is:</h2> {{specific_data['h1_content']}}
+    <h2>body_content is:</h2> <p id="targetElement">{{specific_data['body_content']}}</p>
+{% endif%}
+<script>
+    document.getElementById('copyButton').addEventListener('click', function() {
+        var textToCopy = document.getElementById('targetElement').textContent ;
+        var tempInput = document.createElement("textarea");
+        tempInput.value = textToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Body Content Copied to Clipboard");
+    });
+</script>
+{% endblock %}
+
+
+
+
